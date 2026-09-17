@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="ckb" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ئەکاونتەکانی من  </title>
+    <!-- لۆگۆی ئەپەکان (Font Awesome) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
+            --text-color: #f8fafc;
+            --border-color: #334155;
+            --accent-color: #3b82f6;
+            --active-color: #22c55e;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .profile-container {
+            width: 100%;
+            max-width: 450px;
+            text-align: center;
+        }
+
+        /* بەشی وێنەی پرۆفایل */
+        .profile-upload-container {
+            position: relative;
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 20px auto;
+        }
+
+        .profile-preview {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            border: 3px solid var(--accent-color);
+            object-fit: cover;
+            background-color: var(--card-bg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+            cursor: pointer;
+            overflow: hidden;
+        }
+
+        .profile-preview i {
+            font-size: 40px;
+            color: var(--accent-color);
+        }
+
+        #profileInput {
+            display: none;
+        }
+
+        .upload-text {
+            font-size: 13px;
+            color: #94a3b8;
+            margin-bottom: 25px;
+            cursor: pointer;
+        }
+
+        .upload-text:hover {
+            color: var(--accent-color);
+        }
+
+        h1 {
+            margin: 0 0 5px 0;
+            font-size: 24px;
+            color: #f8fafc;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        /* شێوازی سەحە شینەکەی ڤێریفای */
+        .verified-badge {
+            color: #38bdf8;
+            font-size: 18px;
+            vertical-align: middle;
+            filter: drop-shadow(0 0 5px rgba(56, 189, 248, 0.5));
+        }
+
+        p.bio {
+            color: #94a3b8;
+            font-size: 14px;
+            margin-bottom: 30px;
+        }
+
+        .links-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        /* جووڵەی بەردەوامی دوگمەکان */
+        @keyframes floatEffect {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-6px); }
+            100% { transform: translateY(0px); }
+        }
+
+        .social-btn {
+            background-color: var(--card-bg);
+            color: var(--text-color);
+            text-decoration: none;
+            padding: 16px 20px;
+            border-radius: 14px;
+            border: 1px solid var(--border-color);
+            font-weight: bold;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+            animation: floatEffect 3s ease-in-out infinite;
+            transition: all 0.3s ease;
+        }
+
+        .social-btn:nth-child(1) { animation-delay: 0s; }
+        .social-btn:nth-child(3) { animation-delay: 0.2s; }
+        .social-btn:nth-child(5) { animation-delay: 0.4s; }
+        .social-btn:nth-child(7) { animation-delay: 0.6s; }
+        .social-btn:nth-child(9) { animation-delay: 0.8s; }
+
+        .social-btn:hover {
+            transform: scale(1.03);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
+            animation-play-state: paused;
+        }
+
+        .social-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .social-btn i {
+            font-size: 24px;
+            width: 30px;
+            text-align: center;
+        }
+
+        .social-right {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .social-btn span.username {
+            font-size: 13px;
+            color: #94a3b8;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 5px 10px;
+            border-radius: 8px;
+        }
+
+        /* درەوشانەوەی خاڵی سەوز */
+        .active-dot {
+            width: 10px;
+            height: 10px;
+            background-color: var(--active-color);
+            border-radius: 50%;
+            box-shadow: 0 0 8px var(--active-color);
+            animation: pulseGreen 1.5s infinite;
+        }
+
+        @keyframes pulseGreen {
+            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.7); }
+            70% { transform: scale(1); box-shadow: 0 0 0 6px rgba(34, 197, 94, 0); }
+            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(34, 197, 94, 0); }
+        }
+
+        .instagram:hover { background-color: #e1306c; border-color: #e1306c; }
+        .instagram i { color: #e1306c; }
+        .tiktok:hover { background-color: #000000; border-color: #ff0050; }
+        .tiktok i { color: #ff0050; }
+        .telegram:hover { background-color: #24a1de; border-color: #24a1de; }
+        .telegram i { color: #24a1de; }
+        .facebook:hover { background-color: #1877f2; border-color: #1877f2; }
+        .facebook i { color: #1877f2; }
+        .youtube:hover { background-color: #ff0000; border-color: #ff0000; }
+        .youtube i { color: #ff0000; }
+
+        /* شێوازی هێڵە نەخشێنراوەکە */
+        .divider-box {
+            text-align: center;
+            color: #94a3b8;
+            font-size: 15px;
+            letter-spacing: 2px;
+            margin: 2px 0;
+            opacity: 0.8;
+            animation: floatEffect 3s ease-in-out infinite;
+        }
+
+        /* دیزاینی چوارگۆشەی ڤیدیۆکان (چوار بەش) */
+        .video-grid-container {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 15px;
+            margin-top: 5px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+            animation: floatEffect 3s ease-in-out infinite;
+            animation-delay: 1s;
+        }
+
+        .video-grid-container h3 {
+            margin: 0 0 12px 0;
+            font-size: 15px;
+            color: #94a3b8;
+            text-align: right;
+        }
+
+        .video-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .video-card {
+            background-color: #0f172a;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            height: 100px;
+            text-decoration: none;
+            color: var(--text-color);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            background-size: cover;
+            background-position: center;
+            transition: all 0.3s ease;
+        }
+
+        .video-card:hover {
+            border-color: #ff0000;
+            transform: translateY(-3px);
+        }
+
+        .video-card-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+            background: rgba(15, 23, 42, 0.75);
+            width: 100%;
+            height: 100%;
+            justify-content: center;
+        }
+
+        .video-card i {
+            font-size: 22px;
+            color: #ff0000;
+        }
+
+        .video-card span {
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .social-btn:hover i, 
+        .social-btn:hover span, 
+        .social-btn:hover .username {
+            color: #ffffff !important;
+        }
+        
+        .social-btn:hover span.username {
+            background: rgba(255, 255, 255, 0.2);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="profile-container">
+        
+        <!-- بەشی وێنەی پرۆفایل و گۆڕینی -->
+        <div class="profile-upload-container">
+            <label for="profileInput" class="profile-preview" id="profilePreviewLabel">
+                <i class="fa-solid fa-camera" id="cameraIcon"></i>
+            </label>
+            <input type="file" id="profileInput" accept="image/*" onchange="previewImage(event)">
+        </div>
+        <div class="upload-text" onclick="document.getElementById('profileInput').click()">بۆ دانانی وێنەی پرۆفایل لێرە داگرە</div>
+        
+        <h1>
+            <i class="fa-solid fa-circle-check verified-badge"></i> 
+            𝐀𝐇𝐌𝐀𝐃 𝐒𝐇𝐄𝐑𝐖𝐀𝐍𝐈
+        </h1>
+        <p class="bio">بــەخــێــربــێــن بــۆ پــەڕەی فــەرمــی ئـەکـاونـتـەکـانــم, لــێـرەوە دەتــوانــیـت سـەردانـی ئـەپـــەکــانـم بـکــەیــت</p>
+
+        <!-- دوگمەی ئەپەکان و هێڵەکان لە بەینیاندا -->
+        <div class="links-list" id="linksList">
+            
+            <!-- ئینستاگرام -->
+            <a href="https://instagram.com/lashkr_721" target="_blank" class="social-btn instagram">
+                <div class="social-info">
+                    <i class="fa-brands fa-instagram"></i>
+                    <span>Instagram</span>
+                </div>
+                <div class="social-right">
+                    <span class="username">@lashkr_721</span>
+                    <div class="active-dot"></div>
+                </div>
+            </a>
+
+            <!-- هێڵ -->
+            <div class="divider-box">ــــــــــــــــــــ★ـــــــــــــــــــــ</div>
+
+            <!-- تیکتۆک -->
+            <a href="https://tiktok.com/@ahmad._.sherwanii1" target="_blank" class="social-btn tiktok">
+                <div class="social-info">
+                    <i class="fa-brands fa-tiktok"></i>
+                    <span>TikTok</span>
+                </div>
+                <div class="social-right">
+                    <span class="username">@ahmad._.sherwanii1</span>
+                    <div class="active-dot"></div>
+                </div>
+            </a>
+
+            <!-- هێڵ -->
+            <div class="divider-box">ــــــــــــــــــــ★ـــــــــــــــــــــ</div>
+
+            <!-- تلیگرام -->
+            <a href="https://t.me/Lashkr_E_Malikm" target="_blank" class="social-btn telegram">
+                <div class="social-info">
+                    <i class="fa-brands fa-telegram"></i>
+                    <span>Telegram</span>
+                </div>
+                <div class="social-right">
+                    <span class="username">@Lashkr_E_Malikm</span>
+                    <div class="active-dot"></div>
+                </div>
+            </a>
+
+            <!-- هێڵ -->
+            <div class="divider-box">ــــــــــــــــــــ★ـــــــــــــــــــــ</div>
+
+            <!-- فەیسبووک -->
+            <a href="https://www.facebook.com/share/18hwFDRpWy/" target="_blank" class="social-btn facebook">
+                <div class="social-info">
+                    <i class="fa-brands fa-facebook"></i>
+                    <span>Facebook</span>
+                </div>
+                <div class="social-right">
+                    <span class="username">سەردانکردن</span>
+                    <div class="active-dot"></div>
+                </div>
+            </a>
+
+            <!-- هێڵ -->
+            <div class="divider-box">ــــــــــــــــــــ★ـــــــــــــــــــــ</div>
+
+            <!-- یوتیوب -->
+            <a href="https://youtube.com/@ahmad-sherwani" target="_blank" class="social-btn youtube">
+                <div class="social-info">
+                    <i class="fa-brands fa-youtube"></i>
+                    <span>YouTube</span>
+                </div>
+                <div class="social-right">
+                    <span class="username">@ahmad-sherwani</span>
+                    <div class="active-dot"></div>
+                </div>
+            </a>
+
+            <!-- هێڵ لە نێوان یوتیوب و چوارگۆشەی ڤیدیۆکان -->
+            <div class="divider-box">ــــــــــــــــــــ★ـــــــــــــــــــــ</div>
+
+            <!-- بەشی چوارگۆشەی ڤیدیۆکان کە گەلەری دەکەنەوە -->
+            <div class="video-grid-container">
+                <h3>تایبەتی ڤیدیۆکان (بۆ گۆڕینی وێنە کلیک بکە)</h3>
+                <div class="video-grid">
+                    
+                    <!-- خانەی یەکەم -->
+                    <div class="video-card" id="vidCard1" onclick="document.getElementById('vidInput1').click()">
+                        <div class="video-card-content" id="vidContent1">
+                            <i class="fa-solid fa-play"></i>
+                            <span>ڤیدیۆی ۱</span>
+                        </div>
+                    </div>
+                    <input type="file" id="vidInput1" accept="image/*,video/*" style="display:none;" onchange="previewVideoBox(event, 'vidCard1', 'vidContent1')">
+
+                    <!-- خانەی دووەم -->
+                    <div class="video-card" id="vidCard2" onclick="document.getElementById('vidInput2').click()">
+                        <div class="video-card-content" id="vidContent2">
+                            <i class="fa-solid fa-play"></i>
+                            <span>ڤیدیۆی ۲</span>
+                        </div>
+                    </div>
+                    <input type="file" id="vidInput2" accept="image/*,video/*" style="display:none;" onchange="previewVideoBox(event, 'vidCard2', 'vidContent2')">
+
+                    <!-- خانەی سێیەم -->
+                    <div class="video-card" id="vidCard3" onclick="document.getElementById('vidInput3').click()">
+                        <div class="video-card-content" id="vidContent3">
+                            <i class="fa-solid fa-play"></i>
+                            <span>ڤیدیۆی ۳</span>
+                        </div>
+                    </div>
+                    <input type="file" id="vidInput3" accept="image/*,video/*" style="display:none;" onchange="previewVideoBox(event, 'vidCard3', 'vidContent3')">
+
+                    <!-- خانەی چوارەم -->
+                    <div class="video-card" id="vidCard4" onclick="document.getElementById('vidInput4').click()">
+                        <div class="video-card-content" id="vidContent4">
+                            <i class="fa-solid fa-play"></i>
+                            <span>ڤیدیۆی ۴</span>
+                        </div>
+                    </div>
+                    <input type="file" id="vidInput4" accept="image/*,video/*" style="display:none;" onchange="previewVideoBox(event, 'vidCard4', 'vidContent4')">
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        // پیشاندانی وێنەی پرۆفایل
+        function previewImage(event) {
+            const reader = new FileReader();
+            reader.onload = function(){
+                const previewLabel = document.getElementById('profilePreviewLabel');
+                previewLabel.style.backgroundImage = `url('${reader.result}')`;
+                previewLabel.style.backgroundSize = 'cover';
+                previewLabel.style.backgroundPosition = 'center';
+                const icon = document.getElementById('cameraIcon');
+                if (icon) {
+                    icon.style.display = 'none';
+                }
+            }
+            reader.readAsDataURL(event.target.files[0]);
+        }
+
+        // پیشاندانی وێنە یان ڤیدیۆ لە ناو هەر چوار خانەکەی خوارەوەدا
+        function previewVideoBox(event, cardId, contentId) {
+            const reader = new FileReader();
+            reader.onload = function(){
+                const card = document.getElementById(cardId);
+                const content = document.getElementById(contentId);
+                card.style.backgroundImage = `url('${reader.result}')`;
+                if (content) {
+                    content.style.display = 'none';
+                }
+            }
+            reader.readAsDataURL(event.target.files[0]);
+        }
+    </script>
+
+</body>
+</html>
